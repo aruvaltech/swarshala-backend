@@ -6,13 +6,12 @@ import { prisma } from './db/client';
 async function main() {
     const app = createApp();
 
-    // Verify DB connection
+    // Verify DB connection (non-fatal — server still starts)
     try {
         await prisma.$connect();
         logger.info('Connected to PostgreSQL');
     } catch (err) {
-        logger.fatal({ err }, 'Failed to connect to database');
-        process.exit(1);
+        logger.error({ err }, 'Failed to connect to database — server will start but DB operations will fail');
     }
 
     const server = app.listen(config.port, () => {
