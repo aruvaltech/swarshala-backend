@@ -5,7 +5,7 @@ node_modules/
 dist/
 
 # Environment files
-.env
+# .env  ← committed intentionally for Cloud Build
 .env.local
 .env.development.local
 .env.test.local

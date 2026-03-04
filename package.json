@@ -13,7 +13,8 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx scripts/seed.ts",
     "lint": "eslint src --ext .ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": "gcloud run deploy swarshala-backend --source . --region asia-south2 --project web-landing-484909 --port 4000 --allow-unauthenticated"
   },
   "dependencies": {
     "@prisma/client": "^6.4.0",
