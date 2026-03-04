@@ -76,6 +76,10 @@ export class AuthService {
             throw new UnauthorizedError('Invalid credentials');
         }
 
+        if (!user.passwordHash) {
+            throw new UnauthorizedError('Invalid credentials — use Auth0 login');
+        }
+
         const valid = await verifyPassword(user.passwordHash, input.password);
         if (!valid) {
             throw new UnauthorizedError('Invalid credentials');
