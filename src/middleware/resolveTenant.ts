@@ -14,22 +14,20 @@ export async function resolveTenant(req: Request, _res: Response, next: NextFunc
     try {
         let slug: string | undefined;
 
-        // Dev mode: allow header override
-        if (config.nodeEnv === 'development') {
-            const headerSlug = req.headers['x-tenant-slug'];
-            if (typeof headerSlug === 'string' && headerSlug.length > 0) {
-                slug = headerSlug;
-            }
+        // Always accept X-Tenant-Slug header (used by portal server-side calls)
+        const headerSlug = req.headers['x-tenant-slug'];
+        if (typeof headerSlug === 'string' && headerSlug.length > 0) {
+            slug = headerSlug;
         }
 
-        // Production: parse subdomain from Host header
+        // Fallback: parse subdomain from Host header
         if (!slug) {
             const host = req.hostname; // e.g. instatune.swarshala.com
             const baseDomain = config.baseDomain; // swarshala.com
 
             if (host.endsWith(`.${baseDomain}`)) {
                 const subdomain = host.slice(0, -(baseDomain.length + 1)); // strip .swarshala.com
-                if (subdomain && !subdomain.includes('.')) {
+                if (subdomain && !subdomain.includes('.') && subdomain !== 'api') {
                     slug = subdomain;
                 }
             }

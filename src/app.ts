@@ -23,6 +23,8 @@ import invoicesRoutes from './modules/billing/invoices.routes';
 import paymentsRoutes from './modules/billing/payments.routes';
 import commLogsRoutes from './modules/commLogs/commLogs.routes';
 import auditRoutes from './modules/audit/audit.routes';
+import contactRoutes from './modules/contact/contact.routes';
+import seoRoutes from './modules/seo/seo.routes';
 
 // Lead controller for public route
 import { leadsController } from './modules/leads/leads.controller';
@@ -93,6 +95,9 @@ export function createApp() {
     // ── Platform admin routes (no tenant context) ─────────────
     app.use('/api/v1/platform/tenants', authenticate, requirePlatformAdmin, tenantsRoutes);
 
+    // ── SEO module routes (authenticated) ─────────────────────
+    app.use('/api/v1/seo', authenticate, seoRoutes);
+
     // ── Tenant-scoped routes ───────────────────────────────────
     // All routes below require tenant resolution + authentication
     const tenantRouter = express.Router();
@@ -106,6 +111,7 @@ export function createApp() {
     tenantRouter.use('/invoices', invoicesRoutes);
     tenantRouter.use('/payments', paymentsRoutes);
     tenantRouter.use('/comm-logs', commLogsRoutes);
+    tenantRouter.use('/contacts', contactRoutes);
     tenantRouter.use('/audit-logs', auditRoutes);
 
     app.use('/api/v1', tenantRouter);
