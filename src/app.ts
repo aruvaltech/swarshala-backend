@@ -55,6 +55,11 @@ export function createApp() {
         next();
     });
 
+    // ── Root ───────────────────────────────────────────────────
+    app.get('/', (_req, res) => {
+        res.json({ service: 'swarshala-backend', status: 'ok' });
+    });
+
     // ── Health check ───────────────────────────────────────────
     app.get('/health', (_req, res) => {
         res.json({ status: 'ok', timestamp: new Date().toISOString() });
