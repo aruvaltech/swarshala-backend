@@ -34,6 +34,14 @@ router.post(
     authController.login,
 );
 
+// Super-admin login — no tenant/workspace needed
+router.post(
+    '/admin-login',
+    authLimiter,
+    validate({ body: loginSchema }),
+    authController.adminLogin,
+);
+
 // Refresh — no tenant resolution needed (token contains tenant info)
 router.post(
     '/refresh',

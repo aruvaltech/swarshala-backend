@@ -98,6 +98,25 @@ export class AuthService {
         };
     }
 
+    /** Super-admin login: find a PLATFORM_ADMIN by email, no workspace needed */
+    async adminLogin(email: string, password: string) {
+        const user = await prisma.user.findFirst({
+            where: { email: email.toLowerCase(), role: 'PLATFORM_ADMIN', isActive: true },
+            include: { tenant: { select: { slug: true } } },
+        });
+        if (!user || !user.passwordHash) throw new UnauthorizedError('Invalid credentials');
+
+        const valid = await verifyPassword(user.passwordHash, password);
+        if (!valid) throw new UnauthorizedError('Invalid credentials');
+
+        const tokens = await this.issueTokens(user.id, user.tenantId, user.role, user.email);
+        return {
+            user: { id: user.id, email: user.email, name: user.name, role: user.role },
+            tenantSlug: user.tenant.slug,
+            ...tokens,
+        };
+    }
+
     /** Refresh: rotate refresh token */
     async refresh(refreshTokenRaw: string) {
         let payload;
