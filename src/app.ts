@@ -41,7 +41,12 @@ export function createApp() {
     // ── Global middleware ──────────────────────────────────────
     app.use(helmet());
     app.use(cors({
-        origin: config.cors.origins,
+        origin: (origin, cb) => {
+            const allowed = !origin
+                || config.cors.origins.includes(origin)
+                || /^https?:\/\/([a-z0-9-]+\.)?swarshala\.com$/.test(origin);
+            cb(null, allowed);
+        },
         credentials: true,
     }));
     app.use(compression());

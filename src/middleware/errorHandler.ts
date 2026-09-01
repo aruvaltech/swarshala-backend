@@ -22,6 +22,7 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
         error: {
             code: 'INTERNAL_SERVER_ERROR',
             message: config.nodeEnv === 'production' ? 'Internal server error' : err.message,
+            debug: { name: err.name, message: err.message, code: (err as { code?: string }).code },
         },
     });
 }
