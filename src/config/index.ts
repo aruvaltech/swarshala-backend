@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 function env(key: string, fallback?: string): string {
-    const val = process.env[key] ?? fallback;
+    const raw = process.env[key];
+    const val = raw === undefined || raw.trim() === '' ? fallback : raw;
     if (val === undefined) throw new Error(`Missing env var: ${key}`);
     return val;
 }
