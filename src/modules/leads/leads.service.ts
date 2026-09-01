@@ -34,6 +34,30 @@ export class LeadsService {
         return lead;
     }
 
+    /** Public intake from the marketing website: unassigned lead (central pool) */
+    async createUnassigned(input: PublicLeadInput) {
+        const lead = await prisma.lead.create({
+            data: {
+                tenantId: null,
+                name: input.name,
+                phone: input.phone,
+                email: input.email?.toLowerCase(),
+                city: input.city,
+                instrument: input.instrument,
+                courseInterest: input.courseInterest,
+                preferredTime: input.preferredTime,
+                message: input.message,
+                source: input.source ?? 'WEBSITE',
+                utm: (input.utm as any) ?? {},
+                status: 'NEW',
+            },
+        });
+        await prisma.leadActivity.create({
+            data: { leadId: lead.id, action: 'CREATED', details: { source: input.source ?? 'WEBSITE' } },
+        });
+        return lead;
+    }
+
     /** Create lead from authenticated tenant user */
     async create(tenantId: string, input: PublicLeadInput, actorId: string) {
         const lead = await prisma.lead.create({

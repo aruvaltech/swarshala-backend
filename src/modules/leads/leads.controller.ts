@@ -22,6 +22,16 @@ export class LeadsController {
         }
     }
 
+    /** Public: create an unassigned website lead (central pool) */
+    async createUnassigned(req: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await leadsService.createUnassigned(req.body);
+            res.status(201).json(result);
+        } catch (err) {
+            next(err);
+        }
+    }
+
     /** Authenticated: create lead */
     async create(req: Request, res: Response, next: NextFunction) {
         try {

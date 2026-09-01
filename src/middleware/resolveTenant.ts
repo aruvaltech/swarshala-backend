@@ -43,6 +43,10 @@ export async function resolveTenant(req: Request, _res: Response, next: NextFunc
             throw new NotFoundError('Tenant');
         }
 
+        if (tenant.status === 'PENDING') {
+            throw new AppError(403, 'This workspace is pending approval by an administrator.', 'TENANT_PENDING');
+        }
+
         if (tenant.status !== 'ACTIVE') {
             throw new AppError(403, 'Tenant is suspended or inactive', 'TENANT_SUSPENDED');
         }

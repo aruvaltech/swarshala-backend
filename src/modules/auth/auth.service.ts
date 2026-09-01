@@ -28,7 +28,7 @@ export class AuthService {
                 data: {
                     slug: input.tenantSlug,
                     name: input.tenantName,
-                    status: 'ACTIVE',
+                    status: 'PENDING',
                 },
             });
 
@@ -57,12 +57,12 @@ export class AuthService {
             return { tenant, user };
         });
 
-        const tokens = await this.issueTokens(result.user.id, result.tenant.id, result.user.role, result.user.email);
-
+        // New workspaces require super-admin approval; no session is issued yet.
         return {
             tenant: { id: result.tenant.id, slug: result.tenant.slug, name: result.tenant.name },
             user: { id: result.user.id, email: result.user.email, name: result.user.name, role: result.user.role },
-            ...tokens,
+            pending: true,
+            message: 'Your workspace has been created and is pending approval by an administrator.',
         };
     }
 

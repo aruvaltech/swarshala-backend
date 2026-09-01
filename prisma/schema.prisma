@@ -97,7 +97,7 @@ model PasswordResetToken {
 // ── Leads ───────────────────────────────────────────────────
 model Lead {
     id             String   @id @default(uuid()) @db.Uuid
-    tenantId       String   @map("tenant_id") @db.Uuid
+    tenantId       String?  @map("tenant_id") @db.Uuid
     name           String   @db.VarChar(255)
     phone          String?  @db.VarChar(30)
     email          String?  @db.VarChar(255)
@@ -113,7 +113,7 @@ model Lead {
     createdAt      DateTime @default(now()) @map("created_at")
     updatedAt      DateTime @updatedAt @map("updated_at")
 
-    tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    tenant     Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
     assignedTo User?          @relation("LeadAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
     client     Client?        @relation("ConvertedLead")
     activities LeadActivity[]

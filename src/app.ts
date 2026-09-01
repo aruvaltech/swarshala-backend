@@ -25,6 +25,7 @@ import commLogsRoutes from './modules/commLogs/commLogs.routes';
 import auditRoutes from './modules/audit/audit.routes';
 import contactRoutes from './modules/contact/contact.routes';
 import seoRoutes from './modules/seo/seo.routes';
+import platformRoutes from './modules/platform/platform.routes';
 
 // Lead controller for public route
 import { leadsController } from './modules/leads/leads.controller';
@@ -85,13 +86,12 @@ export function createApp() {
         leadsController.createPublic,
     );
 
-    // Via host header: POST /api/v1/public/leads (resolved by subdomain)
+    // Website intake: POST /api/v1/public/leads → unassigned central pool
     app.post(
         '/api/v1/public/leads',
         publicLeadLimiter,
-        resolveTenant,
         validate({ body: publicLeadSchema }),
-        leadsController.createPublicFromHost,
+        leadsController.createUnassigned,
     );
 
     // ── Public contact form ────────────────────────────────────
@@ -104,7 +104,8 @@ export function createApp() {
 
     // ── Platform admin routes (no tenant context) ─────────────
     app.use('/api/v1/platform/tenants', authenticate, requirePlatformAdmin, tenantsRoutes);
-
+    // ── Platform super-admin routes (leads pool, contacts, admins) ─
+    app.use('/api/v1/platform', authenticate, requirePlatformAdmin, platformRoutes);
     // ── SEO module routes (authenticated) ─────────────────────
     app.use('/api/v1/seo', authenticate, seoRoutes);
 
