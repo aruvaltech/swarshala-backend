@@ -391,6 +391,31 @@ backend/
 
 ---
 
+## Deployment (Vercel)
+
+The backend runs on Vercel as a serverless function that wraps the Express app.
+
+- `api/index.ts` exports the Express app; `vercel.json` routes all traffic to it.
+- `prisma generate` runs automatically after install (`postinstall`) and targets
+  the Vercel runtime engine (`rhel-openssl-3.0.x`).
+
+**Setup**
+
+1. Import the repo in Vercel and set the **root directory** to `backend/`.
+2. Add every environment variable from the table above in the Vercel dashboard
+   (`DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CORS_ORIGINS`, …).
+3. Apply migrations to the production database:
+
+   ```bash
+   DATABASE_URL="<prod-connection-string>" npx prisma migrate deploy
+   ```
+
+4. Point the `api.swarshala.com` domain at the Vercel project.
+
+Deploy on push (Git integration) or manually with `npm run deploy` (`vercel --prod`).
+
+---
+
 ## License
 
 Private — SwarShala © 2026

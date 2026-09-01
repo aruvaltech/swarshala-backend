@@ -14,7 +14,8 @@
     "db:seed": "tsx scripts/seed.ts",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
-    "deploy": "cd .. && ./deploy.sh backend"
+    "postinstall": "prisma generate",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@prisma/client": "^6.4.0",

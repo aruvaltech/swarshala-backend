@@ -1,0 +1,6 @@
+# Secrets are provided via the Vercel dashboard, never uploaded
+.env
+.env.*
+
+# Local build artifacts (Vercel builds the function itself)
+dist
